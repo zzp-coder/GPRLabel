@@ -5,6 +5,8 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 import json, os, sqlite3, yaml
 from starlette.middleware.sessions import SessionMiddleware
+import spacy
+nlp = spacy.load("en_core_web_sm")
 
 app = FastAPI()
 app.add_middleware(SessionMiddleware, secret_key="supersecret")
@@ -66,7 +68,8 @@ def reader(request: Request):
         return templates.TemplateResponse("reader.html", {"request": request, "done": True})
 
     current_para = paragraphs[current_index]
-    sentences = [s.strip() for s in current_para['text'].split('.') if s.strip()]
+    doc = nlp(current_para['text'])
+    sentences = [sent.text.strip() for sent in doc.sents]
     progress = int((current_index + 1) / len(paragraphs) * 100)
 
     return templates.TemplateResponse("reader.html", {
