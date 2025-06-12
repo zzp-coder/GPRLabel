@@ -3,13 +3,18 @@
 <head>
   <title>Reader</title>
   <style>
-    .bar {
-      height: 24px;
-      background-color: lightgray;
+    .bar { height: 24px; background-color: lightgray; }
+    .fill { height: 100%; background-color: green; }
+    .sentence {
+      padding: 4px;
+      transition: background-color 0.2s;
+      cursor: pointer;
     }
-    .fill {
-      height: 100%;
-      background-color: green;
+    .sentence:hover {
+      background-color: #f0f8ff;
+    }
+    .highlight {
+      background-color: yellow !important;
     }
   </style>
 </head>
@@ -20,10 +25,19 @@
   {% else %}
     <div class="bar"><div class="fill" style="width:{{progress}}%"></div></div>
     <h3>Paragraph</h3>
-    <p>{{ paragraph.text }}</p>
+    <div id="paragraph">
+      {% for s in sentences %}
+        <span class="sentence" onclick="toggleHighlight(this)">{{ s }}.</span>
+      {% endfor %}
+    </div>
     <form method="post" action="/confirm">
       <button type="submit">Confirm</button>
     </form>
+    <script>
+      function toggleHighlight(el) {
+        el.classList.toggle('highlight');
+      }
+    </script>
   {% endif %}
 </body>
 </html>

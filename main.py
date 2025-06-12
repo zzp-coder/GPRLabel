@@ -1,6 +1,6 @@
 # main.py
 from fastapi import FastAPI, Request, Form, Depends
-from fastapi.responses import HTMLResponse, RedirectResponse, FileResponse
+from fastapi.responses import HTMLResponse, RedirectResponse, FileResponse, Response
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 import json, os, sqlite3, yaml
@@ -14,7 +14,9 @@ templates = Jinja2Templates(directory="templates")
 
 # === CONFIG ===
 with open("config.yaml", "r") as f:
-    USER_CREDENTIALS = yaml.safe_load(f)
+    config = yaml.safe_load(f)
+    USER_CREDENTIALS = config.get("users", {})
+    ADMIN_PASSWORD = config.get("admin_password", "admin123")
 
 def get_db(user):
     os.makedirs("user_dbs", exist_ok=True)
@@ -42,6 +44,9 @@ def login(request: Request, username: str = Form(...), password: str = Form(...)
     if username in USER_CREDENTIALS and USER_CREDENTIALS[username] == password:
         request.session['user'] = username
         return RedirectResponse(url="/reader", status_code=302)
+    elif username == "admin" and password == ADMIN_PASSWORD:
+        request.session['admin'] = True
+        return RedirectResponse(url="/admin", status_code=302)
     return templates.TemplateResponse("login.html", {"request": request, "error": "Invalid credentials"})
 
 @app.get("/reader", response_class=HTMLResponse)
@@ -61,11 +66,13 @@ def reader(request: Request):
         return templates.TemplateResponse("reader.html", {"request": request, "done": True})
 
     current_para = paragraphs[current_index]
+    sentences = [s.strip() for s in current_para['text'].split('.') if s.strip()]
     progress = int((current_index + 1) / len(paragraphs) * 100)
 
     return templates.TemplateResponse("reader.html", {
         "request": request,
         "paragraph": current_para,
+        "sentences": sentences,
         "progress": progress,
         "done": False
     })
@@ -98,6 +105,9 @@ def logout(request: Request):
 # === Admin Dashboard ===
 @app.get("/admin", response_class=HTMLResponse)
 def admin_dashboard(request: Request):
+    if not request.session.get("admin"):
+        return RedirectResponse("/", 302)
+
     stats = []
     for user in USER_CREDENTIALS:
         db_path = f"user_dbs/{user}.db"
@@ -121,6 +131,8 @@ def admin_dashboard(request: Request):
 
 @app.get("/download_db/{username}")
 def download_db(username: str, request: Request):
+    if not request.session.get("admin"):
+        return Response("Forbidden", status_code=403)
     if username not in USER_CREDENTIALS:
         return {"error": "Invalid user"}
     db_path = f"user_dbs/{username}.db"
