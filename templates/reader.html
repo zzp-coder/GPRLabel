@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Reader</title>
+  <style>
+    .bar {
+      height: 24px;
+      background-color: lightgray;
+    }
+    .fill {
+      height: 100%;
+      background-color: green;
+    }
+  </style>
+</head>
+<body>
+  {% if done %}
+    <h2>You have completed all readings 🎉</h2>
+    <a href="/logout">Logout</a>
+  {% else %}
+    <div class="bar"><div class="fill" style="width:{{progress}}%"></div></div>
+    <h3>Paragraph</h3>
+    <p>{{ paragraph.text }}</p>
+    <form method="post" action="/confirm">
+      <button type="submit">Confirm</button>
+    </form>
+  {% endif %}
+</body>
+</html>
