@@ -1,6 +1,6 @@
 # main.py
 from fastapi import FastAPI, Request, Form, Depends
-from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi.responses import HTMLResponse, RedirectResponse, FileResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 import json, os, sqlite3, yaml
@@ -94,3 +94,36 @@ def confirm_read(request: Request):
 def logout(request: Request):
     request.session.clear()
     return RedirectResponse("/", 302)
+
+# === Admin Dashboard ===
+@app.get("/admin", response_class=HTMLResponse)
+def admin_dashboard(request: Request):
+    stats = []
+    for user in USER_CREDENTIALS:
+        db_path = f"user_dbs/{user}.db"
+        if not os.path.exists(db_path):
+            stats.append({"user": user, "count": 0, "total": "?", "done": False})
+            continue
+        db = sqlite3.connect(db_path)
+        cur = db.cursor()
+        cur.execute("SELECT COUNT(*) FROM progress")
+        count = cur.fetchone()[0]
+        try:
+            paragraphs = load_paragraphs(user)
+            total = len(paragraphs)
+            done = count >= total
+        except:
+            total = "?"
+            done = False
+        stats.append({"user": user, "count": count, "total": total, "done": done})
+
+    return templates.TemplateResponse("admin.html", {"request": request, "stats": stats})
+
+@app.get("/download_db/{username}")
+def download_db(username: str, request: Request):
+    if username not in USER_CREDENTIALS:
+        return {"error": "Invalid user"}
+    db_path = f"user_dbs/{username}.db"
+    if not os.path.exists(db_path):
+        return {"error": "DB not found"}
+    return FileResponse(db_path, filename=f"{username}.db")

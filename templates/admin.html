@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head><title>Admin Dashboard</title></head>
+<body>
+  <h2>📊 User Progress</h2>
+  <table border="1" cellpadding="6">
+    <tr>
+      <th>User</th><th>Read Count</th><th>Total</th><th>Status</th><th>Download</th>
+    </tr>
+    {% for row in stats %}
+    <tr>
+      <td>{{ row.user }}</td>
+      <td>{{ row.count }}</td>
+      <td>{{ row.total }}</td>
+      <td>{{ '✅' if row.done else '❌' }}</td>
+      <td><a href="/download_db/{{ row.user }}">Download DB</a></td>
+    </tr>
+    {% endfor %}
+  </table>
+</body>
+</html>
