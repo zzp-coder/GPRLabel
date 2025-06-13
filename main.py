@@ -6,13 +6,15 @@ from fastapi.templating import Jinja2Templates
 import json, os, sqlite3, yaml
 from starlette.middleware.sessions import SessionMiddleware
 import spacy
-nlp = spacy.load("en_core_web_sm")
 
 app = FastAPI()
 app.add_middleware(SessionMiddleware, secret_key="supersecret")
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
+
+# === NLP Setup ===
+nlp = spacy.load("en_core_web_sm")
 
 # === CONFIG ===
 with open("config.yaml", "r") as f:
@@ -27,7 +29,8 @@ def get_db(user):
     conn.execute("""
         CREATE TABLE IF NOT EXISTS progress (
             id INTEGER PRIMARY KEY,
-            paragraph_id INTEGER
+            paragraph_id INTEGER,
+            selections TEXT
         )
     """)
     return conn
@@ -81,7 +84,7 @@ def reader(request: Request):
     })
 
 @app.post("/confirm")
-def confirm_read(request: Request):
+def confirm_read(request: Request, selection: str = Form(...)):
     user = request.session.get("user")
     if not user:
         return RedirectResponse("/", 302)
@@ -94,8 +97,7 @@ def confirm_read(request: Request):
 
     paragraphs = load_paragraphs(user)
     if next_index < len(paragraphs):
-        pid = paragraphs[next_index]['id']
-        cur.execute("INSERT INTO progress (paragraph_id) VALUES (?)", (next_index,))
+        cur.execute("INSERT INTO progress (paragraph_id, selections) VALUES (?, ?)", (next_index, selection))
         db.commit()
 
     return RedirectResponse("/reader", 302)

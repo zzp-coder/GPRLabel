@@ -25,17 +25,33 @@
   {% else %}
     <div class="bar"><div class="fill" style="width:{{progress}}%"></div></div>
     <h3>Paragraph</h3>
+
     <div id="paragraph">
       {% for s in sentences %}
-        <span class="sentence" onclick="toggleHighlight(this)">{{ s }}</span>
+        <span class="sentence" onclick="toggleHighlight(this, {{ loop.index0 }})">{{ s }}</span><br>
       {% endfor %}
     </div>
+
     <form method="post" action="/confirm">
-      <button type="submit">Confirm</button>
+      <input type="hidden" name="selection" id="selectionInput">
+      <button type="submit" onclick="submitSelection()">Confirm</button>
     </form>
+
     <script>
-      function toggleHighlight(el) {
+      const selections = new Set();
+
+      function toggleHighlight(el, idx) {
         el.classList.toggle('highlight');
+        if (selections.has(idx)) {
+          selections.delete(idx);
+        } else {
+          selections.add(idx);
+        }
+      }
+
+      function submitSelection() {
+        const selectionList = Array.from(selections).sort((a, b) => a - b);
+        document.getElementById('selectionInput').value = selectionList.join(',');
       }
     </script>
   {% endif %}
