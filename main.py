@@ -102,9 +102,10 @@ def confirm_read(request: Request, selection: str = Form(...)):
     paragraphs = load_paragraphs(user)
     if next_index < len(paragraphs):
         para_text = paragraphs[next_index]['text']
+        real_para_id = paragraphs[next_index].get("id", next_index)
         cur.execute(
             "INSERT INTO progress (paragraph_id, selections, paragraph) VALUES (?, ?, ?)",
-            (next_index, selection, para_text)
+            (real_para_id, selection, para_text)
         )
         db.commit()
 
