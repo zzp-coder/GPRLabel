@@ -82,6 +82,8 @@ def reader(request: Request):
         "paragraph": current_para,
         "sentences": sentences,
         "progress": progress,
+        "current_index": current_index,
+        "total": len(paragraphs),
         "done": False
     })
 

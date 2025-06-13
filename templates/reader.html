@@ -29,14 +29,17 @@
       font-weight: bold;
     }
 
-    .sentence {
-      padding: 10px;
-      display: inline-block;
-      margin: 8px 0;
-      transition: background-color 0.2s;
+    #paragraph {
       font-size: 20px;
+      line-height: 1.8;
+      margin-bottom: 30px;
+    }
+
+    .sentence {
+      padding: 2px 4px;
+      transition: background-color 0.2s;
       cursor: pointer;
-      line-height: 1.6;
+      border-radius: 4px;
     }
 
     .sentence:hover {
@@ -55,7 +58,6 @@
       border: none;
       border-radius: 8px;
       cursor: pointer;
-      margin-top: 30px;
       transition: background-color 0.3s ease;
     }
 
@@ -70,11 +72,11 @@
     <a href="/logout">Logout</a>
   {% else %}
     <div class="bar"><div class="fill" style="width:{{progress}}%"></div></div>
-    <div class="progress-text">Reading paragraph {{ paragraph.id }} / {{ sentences|length }}</div>
+    <div class="progress-text">Paragraph {{ current_index + 1 }} / {{ total }}</div>
 
     <div id="paragraph">
       {% for s in sentences %}
-        <span class="sentence" onclick="toggleHighlight(this, {{ loop.index0 }})">{{ s }}</span><br>
+        <span class="sentence" onclick="toggleHighlight(this, {{ loop.index0 }})">{{ s }}</span>
       {% endfor %}
     </div>
 
