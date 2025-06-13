@@ -3,18 +3,64 @@
 <head>
   <title>Reader</title>
   <style>
-    .bar { height: 24px; background-color: lightgray; }
-    .fill { height: 100%; background-color: green; }
-    .sentence {
-      padding: 4px;
-      transition: background-color 0.2s;
-      cursor: pointer;
+    body {
+      font-family: sans-serif;
+      padding: 30px;
+      background-color: #f9f9f9;
     }
+
+    .bar {
+      height: 24px;
+      background-color: #e0e0e0;
+      border-radius: 6px;
+      overflow: hidden;
+      margin-bottom: 10px;
+    }
+
+    .fill {
+      height: 100%;
+      background-color: #4caf50;
+      transition: width 0.3s ease;
+    }
+
+    .progress-text {
+      margin-bottom: 20px;
+      font-size: 16px;
+      font-weight: bold;
+    }
+
+    .sentence {
+      padding: 10px;
+      display: inline-block;
+      margin: 8px 0;
+      transition: background-color 0.2s;
+      font-size: 20px;
+      cursor: pointer;
+      line-height: 1.6;
+    }
+
     .sentence:hover {
       background-color: #f0f8ff;
     }
+
     .highlight {
       background-color: yellow !important;
+    }
+
+    .confirm-button {
+      padding: 12px 24px;
+      font-size: 18px;
+      background-color: #4caf50;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 30px;
+      transition: background-color 0.3s ease;
+    }
+
+    .confirm-button:hover {
+      background-color: #45a049;
     }
   </style>
 </head>
@@ -24,7 +70,7 @@
     <a href="/logout">Logout</a>
   {% else %}
     <div class="bar"><div class="fill" style="width:{{progress}}%"></div></div>
-    <h3>Paragraph</h3>
+    <div class="progress-text">Reading paragraph {{ paragraph.id }} / {{ sentences|length }}</div>
 
     <div id="paragraph">
       {% for s in sentences %}
@@ -34,7 +80,7 @@
 
     <form method="post" action="/confirm">
       <input type="hidden" name="selection" id="selectionInput">
-      <button type="submit" onclick="submitSelection()">Confirm</button>
+      <button type="submit" class="confirm-button" onclick="submitSelection()">✅ Confirm</button>
     </form>
 
     <script>
