@@ -4,6 +4,45 @@
 <head>
     <title>Admin Dashboard</title>
     <link rel="stylesheet" href="/static/style.css">
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 80%;
+            margin: 20px auto;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background-color: #f0f0f0;
+        }
+        .reset-button, .reset-all-button {
+            background-color: #d9534f;
+            color: white;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .reset-all-button {
+            margin-top: 30px;
+            font-size: 16px;
+        }
+        .logout-button {
+            margin-top: 20px;
+            background-color: #5bc0de;
+            color: white;
+            padding: 8px 16px;
+            font-size: 14px;
+            border: none;
+            border-radius: 5px;
+        }
+        h1 {
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
     <h1>Admin Dashboard</h1>
@@ -21,21 +60,22 @@
                 <td>{{ stat.user }}</td>
                 <td>{{ stat.count }} / {{ stat.total }}</td>
                 <td>
-                    <a href="/download_db/{{ stat.user }}">Download DB</a> |
-                    <a href="/admin/reset_user/{{ stat.user }}" onclick="return confirm('Are you sure you want to reset this user?')">Reset</a>
+                    <a href="/download_db/{{ stat.user }}">Download DB</a>
+                    <a class="reset-button" href="/admin/reset_user/{{ stat.user }}" onclick="return confirm('Reset {{ stat.user }}?')">Reset</a>
                 </td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
 
-    <hr>
-    <form action="/logout" method="get">
-        <button type="submit">Logout</button>
-    </form>
+    <div style="text-align: center;">
+        <form action="/logout" method="get">
+            <button type="submit" class="logout-button">Logout</button>
+        </form>
 
-    <form action="/admin/reset_all" method="get" onsubmit="return confirm('Are you sure you want to reset ALL users?')">
-        <button type="submit" style="margin-top: 20px; background-color: red; color: white; padding: 10px 20px; font-size: 16px; border: none; border-radius: 6px; cursor: pointer;">Reset All Users</button>
-    </form>
+        <form action="/admin/reset_all" method="get" onsubmit="return confirm('Reset ALL users?')">
+            <button type="submit" class="reset-all-button">Reset All Users</button>
+        </form>
+    </div>
 </body>
 </html>
