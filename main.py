@@ -30,7 +30,8 @@ def get_db(user):
         CREATE TABLE IF NOT EXISTS progress (
             id INTEGER PRIMARY KEY,
             paragraph_id INTEGER,
-            selections TEXT
+            selections TEXT,
+            paragraph TEXT
         )
     """)
     return conn
@@ -97,7 +98,11 @@ def confirm_read(request: Request, selection: str = Form(...)):
 
     paragraphs = load_paragraphs(user)
     if next_index < len(paragraphs):
-        cur.execute("INSERT INTO progress (paragraph_id, selections) VALUES (?, ?)", (next_index, selection))
+        para_text = paragraphs[next_index]['text']
+        cur.execute(
+            "INSERT INTO progress (paragraph_id, selections, paragraph) VALUES (?, ?, ?)",
+            (next_index, selection, para_text)
+        )
         db.commit()
 
     return RedirectResponse("/reader", 302)
