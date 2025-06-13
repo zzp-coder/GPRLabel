@@ -95,9 +95,9 @@ def confirm_read(request: Request, selection: str = Form(...)):
 
     db = get_db(user)
     cur = db.cursor()
-    cur.execute("SELECT paragraph_id FROM progress ORDER BY id DESC LIMIT 1")
+    cur.execute("SELECT COUNT(*) FROM progress")
     row = cur.fetchone()
-    next_index = row[0] + 1 if row else 0
+    next_index = row[0]
 
     paragraphs = load_paragraphs(user)
     if next_index < len(paragraphs):
