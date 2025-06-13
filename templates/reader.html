@@ -43,7 +43,7 @@
     }
 
     .sentence:hover {
-      background-color: #f0f8ff;
+      background-color: #d0ebff;
     }
 
     .highlight {
@@ -64,6 +64,13 @@
     .confirm-button:hover {
       background-color: #45a049;
     }
+
+    .instruction-title {
+      font-size: 22px;
+      font-weight: 600;
+      margin-bottom: 20px;
+      color: #333;
+    }
   </style>
 </head>
 <body>
@@ -71,6 +78,7 @@
     <h2>You have completed all readings 🎉</h2>
     <a href="/logout">Logout</a>
   {% else %}
+    <h2 class="instruction-title">Please select all the sentences you think are related to geopolitical risks</h2>
     <div class="bar"><div class="fill" style="width:{{progress}}%"></div></div>
     <div class="progress-text">Paragraph {{ current_index + 1 }} / {{ total }}</div>
 
