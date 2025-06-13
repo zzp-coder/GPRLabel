@@ -153,3 +153,30 @@ def download_db(username: str, request: Request):
     if not os.path.exists(db_path):
         return {"error": "DB not found"}
     return FileResponse(db_path, filename=f"{username}.db")
+
+@app.get("/admin/reset_user/{username}")
+def reset_user_db(username: str, request: Request):
+    if not request.session.get("admin"):
+        return Response("Forbidden", status_code=403)
+    db_path = f"/data/user_dbs/{username}.db"
+    if os.path.exists(db_path):
+        os.remove(db_path)
+        return {"status": f"Database for {username} has been deleted."}
+    return {"status": f"Database for {username} not found."}
+
+@app.get("/admin/reset_all")
+def reset_all_dbs(request: Request):
+    if not request.session.get("admin"):
+        return Response("Forbidden", status_code=403)
+    base_path = "/data/user_dbs"
+    if not os.path.exists(base_path):
+        return {"status": "No database directory found."}
+    results = []
+    for user in USER_CREDENTIALS:
+        db_path = os.path.join(base_path, f"{user}.db")
+        if os.path.exists(db_path):
+            os.remove(db_path)
+            results.append(f"Deleted {user}.db")
+        else:
+            results.append(f"{user}.db not found")
+    return {"results": results}
