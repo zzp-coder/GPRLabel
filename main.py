@@ -32,7 +32,8 @@ def get_db(user):
             id INTEGER PRIMARY KEY,
             paragraph_id INTEGER,
             selections TEXT,
-            paragraph TEXT
+            paragraph TEXT,
+            duration REAL
         )
     """)
     return conn
@@ -97,7 +98,7 @@ def reader(request: Request):
     })
 
 @app.post("/confirm")
-def confirm_read(request: Request, selection: str = Form(...)):
+def confirm_read(request: Request, selection: str = Form(...), duration: float = Form(...)):
     user = request.session.get("user")
     if not user:
         return RedirectResponse("/", 302)
@@ -113,8 +114,8 @@ def confirm_read(request: Request, selection: str = Form(...)):
         para_text = paragraphs[next_index]['text']
         real_para_id = paragraphs[next_index].get("id", next_index)
         cur.execute(
-            "INSERT INTO progress (paragraph_id, selections, paragraph) VALUES (?, ?, ?)",
-            (real_para_id, selection, para_text)
+            "INSERT INTO progress (paragraph_id, selections, paragraph, duration) VALUES (?, ?, ?, ?)",
+            (real_para_id, selection, para_text, duration)
         )
         db.commit()
 

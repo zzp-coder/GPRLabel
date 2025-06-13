@@ -43,7 +43,7 @@
     }
 
     .sentence:hover {
-      background-color: #d0ebff;
+      background-color: #90caf9;
     }
 
     .highlight {
@@ -88,12 +88,14 @@
       {% endfor %}
     </div>
 
-    <form method="post" action="/confirm">
+    <form method="post" action="/confirm" onsubmit="updateDurationBeforeSubmit()">
       <input type="hidden" name="selection" id="selectionInput">
+      <input type="hidden" name="duration" id="duration">
       <button type="submit" class="confirm-button" onclick="submitSelection()">✅ Confirm</button>
     </form>
 
     <script>
+      let startTime = Date.now();
       const selections = new Set();
 
       function toggleHighlight(el, idx) {
@@ -108,6 +110,12 @@
       function submitSelection() {
         const selectionList = Array.from(selections).sort((a, b) => a - b);
         document.getElementById('selectionInput').value = selectionList.join(',');
+      }
+
+      function updateDurationBeforeSubmit() {
+        const now = Date.now();
+        const duration = (now - startTime) / 1000;
+        document.getElementById("duration").value = duration.toFixed(2);
       }
     </script>
   {% endif %}
