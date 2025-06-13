@@ -23,8 +23,8 @@ with open("config.yaml", "r") as f:
     ADMIN_PASSWORD = config.get("admin_password", "admin123")
 
 def get_db(user):
-    os.makedirs("user_dbs", exist_ok=True)
-    db_path = f"user_dbs/{user}.db"
+    os.makedirs("/data/user_dbs", exist_ok=True)
+    db_path = f"/data/user_dbs/{user}.db"
     conn = sqlite3.connect(db_path)
     conn.execute("""
         CREATE TABLE IF NOT EXISTS progress (
@@ -120,7 +120,7 @@ def admin_dashboard(request: Request):
 
     stats = []
     for user in USER_CREDENTIALS:
-        db_path = f"user_dbs/{user}.db"
+        db_path = f"/data/user_dbs/{user}.db"
         if not os.path.exists(db_path):
             stats.append({"user": user, "count": 0, "total": "?", "done": False})
             continue
