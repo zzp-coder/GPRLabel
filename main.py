@@ -38,7 +38,16 @@ def get_db(user):
     return conn
 
 def load_paragraphs(user):
-    path = f"app/data/test_{user[-1]}.json"
+    user_file_map = {
+        "user1": "team_1.json",
+        "user2": "team_1_reversed.json",
+        "user3": "team_2.json",
+        "user4": "team_2_reversed.json",
+    }
+    filename = user_file_map.get(user)
+    if not filename:
+        raise ValueError(f"No file mapping found for user: {user}")
+    path = f"app/data/{filename}"
     with open(path, "r", encoding="utf-8") as f:
         return json.load(f)
 
