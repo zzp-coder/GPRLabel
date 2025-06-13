@@ -64,9 +64,9 @@ def reader(request: Request):
 
     db = get_db(user)
     cur = db.cursor()
-    cur.execute("SELECT paragraph_id FROM progress ORDER BY id DESC LIMIT 1")
+    cur.execute("SELECT COUNT(*) FROM progress")
     row = cur.fetchone()
-    current_index = row[0] + 1 if row else 0
+    current_index = row[0]
     paragraphs = load_paragraphs(user)
 
     if current_index >= len(paragraphs):
