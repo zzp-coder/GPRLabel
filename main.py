@@ -98,7 +98,8 @@ def reader(request: Request):
         "progress": progress,
         "current_index": current_index,
         "total": len(paragraphs),
-        "done": False
+        "done": False,
+        "user": user
     })
 
 @app.post("/confirm")

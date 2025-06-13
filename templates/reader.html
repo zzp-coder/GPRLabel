@@ -78,6 +78,9 @@
     <h2>You have completed all readings 🎉</h2>
     <a href="/logout">Logout</a>
   {% else %}
+    <p style="font-size: 16px; color: #666; margin-bottom: 12px;">
+        🔐 Logged in as: <strong>{{ user }}</strong>
+    </p>
     <h2 class="instruction-title">Please select all the sentences you think are related to geopolitical risks</h2>
     <div class="bar"><div class="fill" style="width:{{progress}}%"></div></div>
     <div class="progress-text">Paragraph {{ current_index + 1 }} / {{ total }}</div>
