@@ -44,6 +44,10 @@ def load_paragraphs(user):
         "user2": "team_1_reversed.json",
         "user3": "team_2.json",
         "user4": "team_2_reversed.json",
+        "test1": "test_1.json",
+        "test2": "test_2.json",
+        "test3": "test_3.json",
+        "test4": "test_4.json",
     }
     filename = user_file_map.get(user)
     if not filename:
