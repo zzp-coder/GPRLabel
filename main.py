@@ -25,6 +25,7 @@ with open("config.yaml", "r") as f:
 def get_db(user):
     os.makedirs("/data/user_dbs", exist_ok=True)
     db_path = f"/data/user_dbs/{user}.db"
+    print(f"Opening DB at: {db_path}")
     conn = sqlite3.connect(db_path)
     conn.execute("""
         CREATE TABLE IF NOT EXISTS progress (
@@ -145,7 +146,7 @@ def download_db(username: str, request: Request):
         return Response("Forbidden", status_code=403)
     if username not in USER_CREDENTIALS:
         return {"error": "Invalid user"}
-    db_path = f"user_dbs/{username}.db"
+    db_path = f"/data/user_dbs/{username}.db"
     if not os.path.exists(db_path):
         return {"error": "DB not found"}
     return FileResponse(db_path, filename=f"{username}.db")
