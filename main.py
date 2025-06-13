@@ -6,6 +6,8 @@ from fastapi.templating import Jinja2Templates
 import json, os, sqlite3, yaml
 from starlette.middleware.sessions import SessionMiddleware
 import spacy
+import os
+import ast
 
 app = FastAPI()
 app.add_middleware(SessionMiddleware, secret_key="supersecret")
@@ -17,10 +19,8 @@ templates = Jinja2Templates(directory="templates")
 nlp = spacy.load("en_core_web_sm")
 
 # === CONFIG ===
-with open("config.yaml", "r") as f:
-    config = yaml.safe_load(f)
-    USER_CREDENTIALS = config.get("users", {})
-    ADMIN_PASSWORD = config.get("admin_password", "admin123")
+USER_CREDENTIALS = ast.literal_eval(os.getenv("USER_CREDENTIALS_JSON", "{}"))
+ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD", "admin123")
 
 def get_db(user):
     os.makedirs("/data/user_dbs", exist_ok=True)
