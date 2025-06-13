@@ -1,21 +1,41 @@
+# templates/admin.html
 <!DOCTYPE html>
 <html>
-<head><title>Admin Dashboard</title></head>
+<head>
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
 <body>
-  <h2>📊 User Progress</h2>
-  <table border="1" cellpadding="6">
-    <tr>
-      <th>User</th><th>Read Count</th><th>Total</th><th>Status</th><th>Download</th>
-    </tr>
-    {% for row in stats %}
-    <tr>
-      <td>{{ row.user }}</td>
-      <td>{{ row.count }}</td>
-      <td>{{ row.total }}</td>
-      <td>{{ '✅' if row.done else '❌' }}</td>
-      <td><a href="/download_db/{{ row.user }}">Download DB</a></td>
-    </tr>
-    {% endfor %}
-  </table>
+    <h1>Admin Dashboard</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>User</th>
+                <th>Progress</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for stat in stats %}
+            <tr>
+                <td>{{ stat.user }}</td>
+                <td>{{ stat.count }} / {{ stat.total }}</td>
+                <td>
+                    <a href="/download_db/{{ stat.user }}">Download DB</a> |
+                    <a href="/admin/reset_user/{{ stat.user }}" onclick="return confirm('Are you sure you want to reset this user?')">Reset</a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <hr>
+    <form action="/logout" method="get">
+        <button type="submit">Logout</button>
+    </form>
+
+    <form action="/admin/reset_all" method="get" onsubmit="return confirm('Are you sure you want to reset ALL users?')">
+        <button type="submit" style="margin-top: 20px; background-color: red; color: white; padding: 10px 20px; font-size: 16px; border: none; border-radius: 6px; cursor: pointer;">Reset All Users</button>
+    </form>
 </body>
 </html>
