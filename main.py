@@ -40,7 +40,7 @@ def get_db(user):
 
 def load_paragraphs(user):
     user_file_map = {
-        "user1": "team_1.json",
+        "zhiling": "team_1.json",
         "user2": "team_1_reversed.json",
         "user3": "team_2.json",
         "user4": "team_2_reversed.json",
