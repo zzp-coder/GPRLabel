@@ -2,33 +2,37 @@
 <html>
 <head>
     <title>Stage Closed</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <style>
         body {
-            background-color: #1e1e2f;
-            font-family: 'Courier New', monospace;
-            color: #f0f0f0;
+            background-color: #000;
+            font-family: 'Press Start 2P', monospace;
+            color: #FF4444;
             text-align: center;
-            padding-top: 100px;
+            padding-top: 150px;
         }
         .message {
-            font-size: 24px;
+            font-size: 16px;
         }
         a {
             display: inline-block;
-            margin-top: 30px;
-            padding: 10px 20px;
-            background-color: #4CAF50;
-            color: white;
+            margin-top: 40px;
+            padding: 12px 20px;
+            background-color: transparent;
+            border: 3px solid #FF4444;
+            color: #FF4444;
             text-decoration: none;
-            border-radius: 10px;
+            border-radius: 5px;
+            text-transform: uppercase;
         }
         a:hover {
-            background-color: #45a049;
+            color: #33FF33;
+            border-color: #33FF33;
         }
     </style>
 </head>
 <body>
-    <div class="message">Stage {{ stage }} is not currently open.</div>
-    <a href="/stage_select">Back to Stage Select</a>
+    <div class="message">STAGE {{ stage }} IS NOT CURRENTLY OPEN.</div>
+    <a href="/stage_select">BACK TO STAGE SELECT</a>
 </body>
 </html>
