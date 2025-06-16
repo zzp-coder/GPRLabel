@@ -44,8 +44,8 @@ def load_paragraphs(user):
         "user2": "team_1_reversed.json",
         "user3": "team_2.json",
         "user4": "team_2_reversed.json",
-        "test1": "test_1.json",
-        "test2": "test_2.json",
+        "bangdong": "test_1.json",
+        "zhengzhe": "test_2.json",
         "test3": "test_3.json",
         "test4": "test_4.json",
     }
@@ -64,14 +64,29 @@ def login_page(request: Request):
 def login(request: Request, username: str = Form(...), password: str = Form(...)):
     if username in USER_CREDENTIALS and USER_CREDENTIALS[username] == password:
         request.session['user'] = username
-        return RedirectResponse(url="/reader", status_code=302)
+        return RedirectResponse(url="/stage_select", status_code=302)  # 修改跳转
     elif username == "admin" and password == ADMIN_PASSWORD:
         request.session['admin'] = True
         return RedirectResponse(url="/admin", status_code=302)
     return templates.TemplateResponse("login.html", {"request": request, "error": "Invalid credentials"})
 
+@app.get("/stage_select", response_class=HTMLResponse)
+def stage_select(request: Request):
+    user = request.session.get("user")
+    if not user:
+        return RedirectResponse("/", 302)
+
+    # 定义专家用户名单
+    expert_users = {"bangdong", "zhengzhe"}
+
+    return templates.TemplateResponse("stage_select.html", {
+        "request": request,
+        "user": user,
+        "expert_users": expert_users
+    })
+
 @app.get("/reader", response_class=HTMLResponse)
-def reader(request: Request):
+def reader(request: Request, stage: int = 1):
     user = request.session.get("user")
     if not user:
         return RedirectResponse("/", 302)

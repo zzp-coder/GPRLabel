@@ -1,0 +1,59 @@
+<!-- templates/stage_select.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Select Your Stage</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background: #111;
+            color: #fff;
+            font-family: 'Press Start 2P', cursive;
+            text-align: center;
+            padding-top: 100px;
+        }
+        h1 {
+            margin-bottom: 50px;
+        }
+        .stage {
+            display: inline-block;
+            background: #222;
+            border: 2px solid #0f0;
+            padding: 20px 40px;
+            margin: 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+        }
+        .stage:hover {
+            background: #0f0;
+            color: #000;
+        }
+        .disabled {
+            border-color: #444;
+            color: #666;
+            cursor: not-allowed;
+        }
+        .disabled:hover {
+            background: #222;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <h1>Select Your Mission</h1>
+    <p>Logged in as: <strong>{{ user }}</strong></p>
+
+    <div>
+        <a href="/reader?stage=1" class="stage">1. Initial Annotation</a>
+        <a href="/reader?stage=2" class="stage">2. Justification</a>
+        <a href="/reader?stage=3" class="stage">3. Discussion</a>
+
+        {% if user in expert_users %}
+            <a href="/reader?stage=4" class="stage">4. Expert Arbitration</a>
+        {% else %}
+            <div class="stage disabled">4. Expert Arbitration</div>
+        {% endif %}
+    </div>
+</body>
+</html>
