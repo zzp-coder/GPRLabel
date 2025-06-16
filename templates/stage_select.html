@@ -1,59 +1,47 @@
-<!-- templates/stage_select.html -->
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Select Your Stage</title>
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <title>Stage Selection</title>
+    <link rel="stylesheet" href="/static/style.css">
     <style>
         body {
-            background: #111;
-            color: #fff;
-            font-family: 'Press Start 2P', cursive;
+            background-color: #1e1e2f;
+            font-family: 'Courier New', monospace;
+            color: #f0f0f0;
             text-align: center;
-            padding-top: 100px;
+            padding-top: 50px;
         }
-        h1 {
-            margin-bottom: 50px;
-        }
-        .stage {
-            display: inline-block;
-            background: #222;
-            border: 2px solid #0f0;
-            padding: 20px 40px;
-            margin: 20px;
-            border-radius: 10px;
+        .stage-button {
+            display: block;
+            margin: 20px auto;
+            padding: 15px 40px;
+            background-color: #4CAF50;
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 20px;
             cursor: pointer;
-            transition: all 0.3s ease-in-out;
+            width: 250px;
         }
-        .stage:hover {
-            background: #0f0;
-            color: #000;
+        .stage-button:hover {
+            background-color: #45a049;
         }
-        .disabled {
-            border-color: #444;
-            color: #666;
-            cursor: not-allowed;
-        }
-        .disabled:hover {
-            background: #222;
-            color: #666;
+        .welcome {
+            font-size: 28px;
+            margin-bottom: 40px;
         }
     </style>
 </head>
 <body>
-    <h1>Select Your Mission</h1>
-    <p>Logged in as: <strong>{{ user }}</strong></p>
-
-    <div>
-        <a href="/reader?stage=1" class="stage">1. Initial Annotation</a>
-        <a href="/reader?stage=2" class="stage">2. Justification</a>
-        <a href="/reader?stage=3" class="stage">3. Discussion</a>
-
-        {% if user in expert_users %}
-            <a href="/reader?stage=4" class="stage">4. Expert Arbitration</a>
-        {% else %}
-            <div class="stage disabled">4. Expert Arbitration</div>
-        {% endif %}
-    </div>
+    <div class="welcome">Welcome, {{ user }}!</div>
+    {% for stage_name, stage_num in stages %}
+        <form action="/go_to_stage" method="get">
+            <input type="hidden" name="stage" value="{{ stage_num }}">
+            <button type="submit" class="stage-button">{{ stage_num }}. {{ stage_name }}</button>
+        </form>
+    {% endfor %}
+    <form action="/logout" method="get" style="margin-top: 40px;">
+        <button class="stage-button" style="background-color: #f44336;">Logout</button>
+    </form>
 </body>
 </html>

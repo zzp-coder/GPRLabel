@@ -79,11 +79,35 @@ def stage_select(request: Request):
     # 定义专家用户名单
     expert_users = {"bangdong", "zhengzhe"}
 
+    if user in expert_users:
+        stages = [("Expert Arbitration", 4)]
+    else:
+        stages = [
+            ("Initial Annotation", 1),
+            ("Justification", 2),
+            ("Discussion", 3),
+        ]
+
     return templates.TemplateResponse("stage_select.html", {
         "request": request,
         "user": user,
-        "expert_users": expert_users
+        "stages": stages
     })
+
+@app.get("/go_to_stage")
+def go_to_stage(request: Request, stage: int):
+    user = request.session.get("user")
+    if not user:
+        return RedirectResponse("/", 302)
+
+    expert_users = {"expert1", "admin"}
+
+    if stage == 1 and user not in expert_users:
+        return RedirectResponse("/reader", 302)
+    elif stage == 4 and user in expert_users:
+        return templates.TemplateResponse("not_open.html", {"request": request, "stage": stage})
+    else:
+        return templates.TemplateResponse("not_open.html", {"request": request, "stage": stage})
 
 @app.get("/reader", response_class=HTMLResponse)
 def reader(request: Request, stage: int = 1):
