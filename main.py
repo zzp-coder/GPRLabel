@@ -197,6 +197,34 @@ def admin_dashboard(request: Request):
 
     return templates.TemplateResponse("admin.html", {"request": request, "stats": stats})
 
+@app.get("/justification", response_class=HTMLResponse)
+def justification_page(request: Request):
+    user = request.session.get("user")
+    if not user:
+        return RedirectResponse("/", 302)
+
+    # 加载模拟的justification数据
+    with open("app/data/justification_demo.json", "r", encoding="utf-8") as f:
+        data = json.load(f)
+
+    # 目前仅返回一个测试段落
+    para = data[0]
+    sentences = para["text"].split(". ")
+    conflicts = []
+
+    for s in sentences:
+        s = s.strip()
+        if s and s in para["sentence_labels"]:
+            labels = para["sentence_labels"][s]
+            if len(set(labels)) > 1:
+                conflicts.append(s)
+
+    return templates.TemplateResponse("justification.html", {
+        "request": request,
+        "paragraph": para["text"],
+        "conflicts": conflicts
+    })
+
 @app.get("/download_db/{username}")
 def download_db(username: str, request: Request):
     if not request.session.get("admin"):

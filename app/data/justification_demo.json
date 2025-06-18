@@ -1,0 +1,11 @@
+[
+  {
+    "id": 42,
+    "text": "The company expects growth in the next quarter. However, market conditions remain uncertain. Analysts are divided on future performance.",
+    "sentence_labels": {
+      "The company expects growth in the next quarter.": [1, 1, 1],
+      "However, market conditions remain uncertain.": [1, 0, 0],
+      "Analysts are divided on future performance.": [0, 0, 1]
+    }
+  }
+]
