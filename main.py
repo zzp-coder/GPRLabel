@@ -8,7 +8,7 @@ from starlette.middleware.sessions import SessionMiddleware
 import spacy
 import os
 import ast
-
+JUSTIFICATION_DATA_PATH = "app/data/justification_demo.json"
 app = FastAPI()
 app.add_middleware(SessionMiddleware, secret_key="supersecret")
 
@@ -104,8 +104,16 @@ def go_to_stage(request: Request, stage: int):
 
     if stage == 1 and user not in expert_users:
         return RedirectResponse("/reader", 302)
+
+    elif stage == 2 and user not in expert_users:
+        if os.path.exists(JUSTIFICATION_DATA_PATH):  # ✅ 判断文件是否存在
+            return RedirectResponse("/justification", 302)
+        else:
+            return templates.TemplateResponse("not_open.html", {"request": request, "stage": stage})
+
     elif stage == 4 and user in expert_users:
         return templates.TemplateResponse("not_open.html", {"request": request, "stage": stage})
+
     else:
         return templates.TemplateResponse("not_open.html", {"request": request, "stage": stage})
 
